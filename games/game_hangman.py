@@ -1,78 +1,191 @@
-#importing the time module
-import time
+"""
+Project: Game hanger
+"""
 
-#welcoming the user
-name = input("What is your name? ")
+import random
+import os
 
-print ("Hello, " + name, "Time to play hangman!")
+DEBUG = True
 
-#wait for 1 second
-time.sleep(1)
+logo = ''' 
+ _                                             
+| |                                            
+| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __  
+| '_ \ / _` | '_ \ / _` | '_ ` _ \ / _` | '_ \ 
+| | | | (_| | | | | (_| | | | | | | (_| | | | |
+|_| |_|\__,_|_| |_|\__, |_| |_| |_|\__,_|_| |_|
+                    __/ |                      
+                   |___/    '''
 
-print ("Start guessing...")
-time.sleep(0.5)
+stages = ['''
+  +---+
+  |   |
+  O   |
+ /|\  |
+ / \  |
+      |
+=========
+''', '''
+  +---+
+  |   |
+  O   |
+ /|\  |
+ /    |
+      |
+=========
+''', '''
+  +---+
+  |   |
+  O   |
+ /|\  |
+      |
+      |
+=========
+''', '''
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========
+''', '''
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========
+''', '''
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========
+''']
 
-#here we set the secret. You can select any word to play with. 
-word = ("brios")
+word_list = [
+'quorum', 
+'razzmatazz', 
+'rhubarb', 
+'rhythm', 
+'rickshaw', 
+'schnapps', 
+'scratch', 
+'shiv', 
+'snazzy', 
+'sphinx', 
+'spritz', 
+'squawk', 
+'staff', 
+'strength', 
+'strengths', 
+'stretch', 
+'stronghold', 
+'stymied', 
+'subway', 
+'swivel', 
+'syndrome', 
+'thriftless', 
+'thumbscrew', 
+'topaz', 
+'transcript', 
+'transgress', 
+'transplant', 
+'triphthong', 
+'twelfth', 
+'twelfths', 
+'unknown', 
+'unworthy', 
+'unzip', 
+'uptown', 
+'vaporize', 
+'vixen', 
+'vodka', 
+'voodoo', 
+'vortex', 
+'voyeurism', 
+'walkway', 
+'waltz', 
+'wave', 
+'wavy', 
+'waxy', 
+'wellspring', 
+'wheezy', 
+'whiskey', 
+'whizzing', 
+'whomever', 
+'wimpy', 
+'witchcraft', 
+'wizard', 
+'woozy', 
+'wristwatch', 
+'wyvern', 
+'xylophone', 
+'yachtsman', 
+'yippee', 
+'yoked', 
+'youthful', 
+'yummy', 
+'zephyr', 
+'zigzag', 
+'zigzagging', 
+'zilch', 
+'zipper', 
+'zodiac', 
+'zombie', 
+]
+user_life = 6
+end_of_the_game = False
 
-#creates an variable with an empty value
-guesses = ''
+random_word = random.choice(word_list)
+random_word_length = len(random_word)
+display = []
 
-#determine the number of turns
-turns = 10
+for _ in range(random_word_length):
+    display += "_"
 
-# Create a while loop
+if DEBUG:
+    print(random_word)
 
-#check if the turns are more than zero
-while turns > 0:         
+print(logo)
 
-    # make a counter that starts with zero
-    failed = 0             
+while not end_of_the_game:
+    guessed_letter = input("Guess a letter: ").lower()
 
-    # for every character in secret_word    
-    for char in word:      
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-    # see if the character is in the players guess
-        if char in guesses:    
+    for index in range(random_word_length):
+        letter = random_word[index]
+
+        if letter == guessed_letter:
+            display[index] = letter
     
-        # print then out the character
-            print (char,end=""),    
+    #Print the results on the screen
+    print(stages[user_life])
+    #Join all the elements in the list and turn it into a String.
+    print(f"{' '.join(display)}\n")
 
-        else:
-    
-        # if not found, print a dash
-            print ("_",end=""),     
-       
-        # and increase the failed counter with one
-            failed += 1    
+    #Check if the letter is in the word string
+    if guessed_letter not in random_word:
+        user_life -= 1
+        print(f"The letter is not presented in the word. Lost one life, {user_life} is remaining\n")
 
-    # if failed is equal to zero
+    #Check if the game is ended or not
+    if display.count("_") == 0 or user_life  == 0:
+        end_of_the_game = True
 
-    # print You Won
-    if failed == 0:        
-        print ("You won")
-    # exit the script
-        break            
-    # ask the user go guess a character
-    guess = input("guess a character:") 
-
-    # set the players guess to guesses
-    guesses += guess                    
-
-    # if the guess is not found in the secret word
-    if guess not in word:  
- 
-     # turns counter decreases with 1 (now 9)
-        turns -= 1        
- 
-    # print wrong
-        print ("Wrong")  
- 
-    # how many turns are left
-        print ("You have", + turns, 'more guesses' )
- 
-    # if the turns are equal to zero
-        if turns == 0:           
-    
-        # print "You Lose"
-            print ("You Lose"  )
+if user_life > 0:
+    print("You won!")
+else:
+    print(f"You lost, the word was: {random_word}")
