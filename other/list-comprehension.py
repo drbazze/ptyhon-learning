@@ -33,3 +33,11 @@ print([[a, b]
        for a in animals 
        for b in [reverse(x) for x in animals] #reverse the animals item
        if reverse(a) == b]) #filter if the "a" reversed == "b" reversed, but keep "a" unchanged
+
+#Count letter occurences in a string without the space.
+string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae orci in neque sagittis venenatis.".lower()
+#The set of the unique letters
+letters = set(string)
+letters_count = [[x, string.count(x)] for x in letters if x != " "]
+#Sort and print the found letters in a reverse order of the its occurance
+print(sorted(letters_count, key=lambda x: x[1], reverse=True))
