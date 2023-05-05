@@ -1,5 +1,6 @@
 import os
 import random
+from prettytable import PrettyTable
 
 class BlackJack():
     def __init__(self):
@@ -10,6 +11,7 @@ class BlackJack():
             "user": 0,
             "computer": 0
         }
+        self.ui_leader_board_table = PrettyTable(["Player", "Score"])
 
         self.logo = """
                     .------.            _     _            _    _            _    
@@ -76,10 +78,10 @@ class BlackJack():
         #Sort the leader board
         board = sorted(self.leader_board.items(), key=lambda item: item[1], reverse=True)
 
-        n = 0
         for item in board:
-            n += 1
-            print(f"{n}. {item[0]} score: {item[1]}")
+            self.ui_leader_board_table.add_row([item[0], item[1]])
+
+        print(self.ui_leader_board_table)
         
     def play(self):
         self.user_cards = []
@@ -88,6 +90,7 @@ class BlackJack():
         
         os.system('clear')
         print(self.logo)
+        self.ui_leader_board_table.clear_rows()
         
         for _ in range(2):
             self.user_cards.append(self.deal_cards())
